@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recent Earthquakes in Mexico</title>
+    <title>Sismos Recientes en México</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body {
@@ -28,26 +28,26 @@
     </style>
 </head>
 <body>
-    <h1>Recent Earthquakes in Mexico</h1>
+    <h1>Sismos Recientes en México</h1>
     <div id="map"></div>
     <div id="earthquake-list">
-        <h2>10 Most Recent Earthquakes</h2>
+        <h2>5 Sismos Más Recientes</h2>
         <div id="list"></div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Initialize the map
-        const map = L.map('map').setView([23.6345, -102.5528], 5); // Center on Mexico
+        // Inicializar el mapa
+        const map = L.map('map').setView([23.6345, -102.5528], 5); // Centrado en México
 
-        // Add OpenStreetMap tiles
+        // Añadir las capas de OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Fetch recent earthquake data
-        const earthquakeApi = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-01-01&minlatitude=14&maxlatitude=33&minlongitude=-118&maxlongitude=-86&limit=10";
+        // URL de la API de USGS para obtener datos de sismos
+        const earthquakeApi = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-01-01&minlatitude=14&maxlatitude=33&minlongitude=-118&maxlongitude=-86&limit=5";
 
         fetch(earthquakeApi)
             .then(response => response.json())
@@ -59,21 +59,22 @@
                     const coords = earthquake.geometry.coordinates;
                     const magnitude = earthquake.properties.mag;
                     const place = earthquake.properties.place;
-                    const time = new Date(earthquake.properties.time).toLocaleString();
+                    const time = new Date(earthquake.properties.time).toLocaleString('es-ES');
 
-                    // Add markers to the map
+                    // Añadir marcadores al mapa
                     L.marker([coords[1], coords[0]])
                         .addTo(map)
-                        .bindPopup(`<strong>Magnitude:</strong> ${magnitude}<br><strong>Location:</strong> ${place}<br><strong>Time:</strong> ${time}`);
+                        .bindPopup(`<strong>Magnitud:</strong> ${magnitude}<br><strong>Ubicación:</strong> ${place}<br><strong>Hora:</strong> ${time}`);
 
-                    // Add earthquakes to the list
+                    // Añadir los sismos a la lista
                     const item = document.createElement('div');
                     item.className = 'earthquake-item';
-                    item.innerHTML = `<strong>Magnitude:</strong> ${magnitude}<br><strong>Location:</strong> ${place}<br><strong>Time:</strong> ${time}`;
+                    item.innerHTML = `<strong>Magnitud:</strong> ${magnitude}<br><strong>Ubicación:</strong> ${place}<br><strong>Hora:</strong> ${time}`;
                     listElement.appendChild(item);
                 });
             })
-            .catch(error => console.error("Error fetching earthquake data:", error));
+            .catch(error => console.error("Error al obtener los datos de sismos:", error));
     </script>
 </body>
 </html>
+
